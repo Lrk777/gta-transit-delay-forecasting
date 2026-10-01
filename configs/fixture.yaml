@@ -1,0 +1,84 @@
+# Offline fixture config — short synthetic series for CI / pytest
+seed: 42
+
+target:
+  column: total_delay_min
+  horizon_days: 1
+
+transit:
+  name: fixture-ttc-like
+  portal: https://open.toronto.ca/dataset/ttc-bus-delay-data/
+  ckan_package_url: https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show
+  package_id: ttc-bus-delay-data
+  resource_names: []
+  attribution: Synthetic fixture shaped like TTC Bus Delay daily aggregates.
+  license: MIT (fixture)
+
+weather:
+  name: fixture-open-meteo-like
+  url: https://archive-api.open-meteo.com/v1/archive
+  attribution: Synthetic fixture shaped like Open-Meteo daily weather.
+  license: MIT (fixture)
+  latitude: 43.6532
+  longitude: -79.3832
+  timezone: America/Toronto
+  start_date: "2024-01-01"
+  end_date: "2024-03-31"
+  daily_variables:
+    - temperature_2m_mean
+    - temperature_2m_min
+    - temperature_2m_max
+    - precipitation_sum
+    - rain_sum
+    - snowfall_sum
+    - windspeed_10m_max
+
+features:
+  delay_lags: [1, 7, 14]
+  rolling_windows: [7, 14]
+  calendar:
+    - day_of_week
+    - month
+    - is_weekend
+    - is_month_start
+    - day_of_year
+    - is_stat_holiday
+  weather_lag_days: 1
+  weather_columns:
+    - temperature_2m_mean
+    - precipitation_sum
+    - snowfall_sum
+    - windspeed_10m_max
+
+splits:
+  train_end: "2024-02-20"
+  val_end: "2024-03-10"
+
+models:
+  ridge:
+    alpha: 10.0
+  hist_gradient_boosting:
+    max_depth: 3
+    learning_rate: 0.1
+    max_iter: 100
+    min_samples_leaf: 5
+    l2_regularization: 0.5
+    early_stopping: true
+    validation_fraction: null
+    n_iter_no_change: 15
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  reports_dir: reports
+  figures_dir: reports/figures
+  transit_daily_csv: data/processed/ttc_bus_daily_delays.csv
+  weather_daily_csv: data/processed/toronto_daily_weather.csv
+  feature_matrix_csv: data/processed/feature_matrix.csv
+  metrics_json: reports/metrics.json
+  error_analysis_json: reports/error_analysis.json
+  predictions_csv: reports/test_predictions.csv
+
+use_fixture: true
+fixture_transit: tests/fixtures/transit_daily_sample.csv
+fixture_weather: tests/fixtures/weather_daily_sample.csv

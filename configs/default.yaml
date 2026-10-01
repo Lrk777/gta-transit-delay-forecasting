@@ -1,0 +1,101 @@
+# GTA-style transit delay forecasting — TTC bus incident delays + Open-Meteo weather
+# Transit source: City of Toronto Open Data — TTC Bus Delay Data
+#   https://open.toronto.ca/dataset/ttc-bus-delay-data/
+# Weather: Open-Meteo Historical Weather API (CC BY 4.0)
+#   https://open-meteo.com/en/docs/historical-weather-api
+
+seed: 42
+
+target:
+  # System-wide daily sum of reported incident delay minutes
+  column: total_delay_min
+  # 1-day-ahead forecast: features use only information available at end of day t-1
+  horizon_days: 1
+
+transit:
+  name: ttc-bus-delay-data
+  portal: https://open.toronto.ca/dataset/ttc-bus-delay-data/
+  ckan_package_url: https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action/package_show
+  package_id: ttc-bus-delay-data
+  # Yearly workbook resource names on the CKAN package
+  resource_names:
+    - ttc-bus-delay-data-2023
+    - ttc-bus-delay-data-2024
+  attribution: >
+    Toronto Transit Commission / City of Toronto Open Data — TTC Bus Delay Data.
+    Open Government Licence – Toronto.
+  license: Open Government Licence – Toronto
+
+weather:
+  name: open-meteo-historical
+  url: https://archive-api.open-meteo.com/v1/archive
+  attribution: Weather data by Open-Meteo.com (CC BY 4.0)
+  license: CC BY 4.0
+  latitude: 43.6532
+  longitude: -79.3832
+  timezone: America/Toronto
+  # Inclusive calendar dates covering the transit years above
+  start_date: "2023-01-01"
+  end_date: "2024-12-31"
+  daily_variables:
+    - temperature_2m_mean
+    - temperature_2m_min
+    - temperature_2m_max
+    - precipitation_sum
+    - rain_sum
+    - snowfall_sum
+    - windspeed_10m_max
+
+features:
+  delay_lags: [1, 7, 14]
+  rolling_windows: [7, 14]
+  calendar:
+    - day_of_week
+    - month
+    - is_weekend
+    - is_month_start
+    - day_of_year
+    - is_stat_holiday
+  # Weather observed on day t-1 (available at forecast time for day t)
+  weather_lag_days: 1
+  weather_columns:
+    - temperature_2m_mean
+    - precipitation_sum
+    - snowfall_sum
+    - windspeed_10m_max
+
+# Strict chronological splits — no random shuffle
+splits:
+  train_end: "2024-04-30"
+  val_end: "2024-08-31"
+  # test: remaining rows through weather/transit end_date
+
+models:
+  ridge:
+    alpha: 10.0
+  hist_gradient_boosting:
+    max_depth: 4
+    learning_rate: 0.05
+    max_iter: 500
+    min_samples_leaf: 30
+    l2_regularization: 1.0
+    early_stopping: true
+    validation_fraction: null  # we pass an explicit val set in train.py
+    n_iter_no_change: 30
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  reports_dir: reports
+  figures_dir: reports/figures
+  transit_daily_csv: data/processed/ttc_bus_daily_delays.csv
+  weather_daily_csv: data/processed/toronto_daily_weather.csv
+  feature_matrix_csv: data/processed/feature_matrix.csv
+  metrics_json: reports/metrics.json
+  error_analysis_json: reports/error_analysis.json
+  predictions_csv: reports/test_predictions.csv
+
+# Offline / CI: skip live downloads; use checked-in processed daily tables
+use_fixture: false
+fixture_transit: tests/fixtures/transit_daily_sample.csv
+fixture_weather: tests/fixtures/weather_daily_sample.csv

@@ -1,0 +1,120 @@
+{
+  "seed": 42,
+  "target": "total_delay_min",
+  "n_features": 19,
+  "features": [
+    "day_of_week",
+    "month",
+    "is_weekend",
+    "is_month_start",
+    "day_of_year",
+    "is_stat_holiday",
+    "total_delay_min_lag_1",
+    "total_delay_min_lag_7",
+    "total_delay_min_lag_14",
+    "total_delay_min_roll7_mean",
+    "total_delay_min_roll7_std",
+    "total_delay_min_roll7_max",
+    "total_delay_min_roll14_mean",
+    "total_delay_min_roll14_std",
+    "total_delay_min_roll14_max",
+    "temperature_2m_mean_lag_1",
+    "precipitation_sum_lag_1",
+    "snowfall_sum_lag_1",
+    "windspeed_10m_max_lag_1"
+  ],
+  "split_sizes": {
+    "train": 472,
+    "val": 123,
+    "test": 122
+  },
+  "split_ranges": {
+    "train": [
+      "2023-01-15",
+      "2024-04-30"
+    ],
+    "val": [
+      "2024-05-01",
+      "2024-08-31"
+    ],
+    "test": [
+      "2024-09-01",
+      "2024-12-31"
+    ]
+  },
+  "val_metrics": {
+    "naive_lag1": {
+      "mae": 1039.4634146341464,
+      "rmse": 1318.6645992075664,
+      "r2": -0.5744023400481728,
+      "mape_pct": 31.78773764764673,
+      "bias": 9.658536585365853,
+      "n": 123
+    },
+    "seasonal_lag7": {
+      "mae": 1201.0,
+      "rmse": 1529.728874962589,
+      "r2": -1.1187316825691442,
+      "mape_pct": 37.68854252881194,
+      "bias": -19.130081300813007,
+      "n": 123
+    },
+    "ridge": {
+      "mae": 865.411277711244,
+      "rmse": 1083.1085581042323,
+      "r2": -0.062162603523739035,
+      "mape_pct": 27.320026567279555,
+      "bias": 4.263848037532138,
+      "n": 123
+    },
+    "hist_gradient_boosting": {
+      "mae": 860.5446482037893,
+      "rmse": 1077.4715239620343,
+      "r2": -0.05113533207551457,
+      "mape_pct": 26.83494252463384,
+      "bias": -74.23591930934344,
+      "n": 123
+    }
+  },
+  "test_metrics": {
+    "naive_lag1": {
+      "mae": 966.8196721311475,
+      "rmse": 1304.237293606032,
+      "r2": -0.5836411800400108,
+      "mape_pct": 31.968791030553206,
+      "bias": -5.459016393442623,
+      "n": 122
+    },
+    "seasonal_lag7": {
+      "mae": 1203.844262295082,
+      "rmse": 1526.7196243827514,
+      "r2": -1.1700119912629257,
+      "mape_pct": 41.650016044845465,
+      "bias": 100.09016393442623,
+      "n": 122
+    },
+    "ridge": {
+      "mae": 864.932790383592,
+      "rmse": 1087.7607822056566,
+      "r2": -0.10156556487961055,
+      "mape_pct": 29.935363766027578,
+      "bias": -5.044206274004007,
+      "n": 122
+    },
+    "hist_gradient_boosting": {
+      "mae": 869.4180584661287,
+      "rmse": 1086.083456207212,
+      "r2": -0.09817095822100086,
+      "mape_pct": 31.440751383670957,
+      "bias": 157.20066803772616,
+      "n": 122
+    }
+  },
+  "selected_model": "hist_gradient_boosting",
+  "selection_rule": "lowest validation MAE",
+  "data_notes": {
+    "transit": "Toronto Transit Commission / City of Toronto Open Data \u2014 TTC Bus Delay Data. Open Government Licence \u2013 Toronto.",
+    "weather": "Weather data by Open-Meteo.com (CC BY 4.0)",
+    "forecast_contract": "1-day-ahead: lag/rolling delay features and lag-1 weather only; no same-day weather or target leakage; chronological splits."
+  }
+}

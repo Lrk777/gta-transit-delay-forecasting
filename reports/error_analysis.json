@@ -1,0 +1,134 @@
+{
+  "selected_model": "hist_gradient_boosting",
+  "mae_by_day_of_week": {
+    "Sunday": {
+      "mean": 748.27,
+      "median": 600.71,
+      "count": 18
+    },
+    "Monday": {
+      "mean": 1072.52,
+      "median": 1091.41,
+      "count": 18
+    },
+    "Tuesday": {
+      "mean": 1046.53,
+      "median": 935.37,
+      "count": 18
+    },
+    "Wednesday": {
+      "mean": 1252.05,
+      "median": 1151.96,
+      "count": 17
+    },
+    "Thursday": {
+      "mean": 747.65,
+      "median": 657.79,
+      "count": 17
+    },
+    "Friday": {
+      "mean": 663.04,
+      "median": 588.43,
+      "count": 17
+    },
+    "Saturday": {
+      "mean": 540.62,
+      "median": 425.2,
+      "count": 17
+    }
+  },
+  "mae_by_precip_bucket_lag1": {
+    "dry": {
+      "mean": 827.04,
+      "median": 701.57,
+      "count": 64
+    },
+    "light": {
+      "mean": 1045.29,
+      "median": 750.98,
+      "count": 30
+    },
+    "moderate": {
+      "mean": 753.9,
+      "median": 413.27,
+      "count": 19
+    },
+    "heavy": {
+      "mean": 828.43,
+      "median": 765.65,
+      "count": 9
+    }
+  },
+  "worst_abs_error_days": [
+    {
+      "date": "2024-11-20",
+      "y_true": 6698.0,
+      "y_pred": 3193.91,
+      "abs_error": 3504.09,
+      "day_of_week": "Wednesday"
+    },
+    {
+      "date": "2024-09-04",
+      "y_true": 5846.0,
+      "y_pred": 3488.39,
+      "abs_error": 2357.61,
+      "day_of_week": "Wednesday"
+    },
+    {
+      "date": "2024-11-10",
+      "y_true": 1562.0,
+      "y_pred": 3867.64,
+      "abs_error": 2305.64,
+      "day_of_week": "Sunday"
+    },
+    {
+      "date": "2024-12-25",
+      "y_true": 1462.0,
+      "y_pred": 3740.1,
+      "abs_error": 2278.1,
+      "day_of_week": "Wednesday"
+    },
+    {
+      "date": "2024-09-05",
+      "y_true": 2089.0,
+      "y_pred": 4361.06,
+      "abs_error": 2272.06,
+      "day_of_week": "Thursday"
+    },
+    {
+      "date": "2024-11-18",
+      "y_true": 5419.0,
+      "y_pred": 3164.27,
+      "abs_error": 2254.73,
+      "day_of_week": "Monday"
+    },
+    {
+      "date": "2024-09-23",
+      "y_true": 5644.0,
+      "y_pred": 3474.51,
+      "abs_error": 2169.49,
+      "day_of_week": "Monday"
+    },
+    {
+      "date": "2024-12-26",
+      "y_true": 1018.0,
+      "y_pred": 3059.92,
+      "abs_error": 2041.92,
+      "day_of_week": "Thursday"
+    },
+    {
+      "date": "2024-11-04",
+      "y_true": 5471.0,
+      "y_pred": 3477.45,
+      "abs_error": 1993.55,
+      "day_of_week": "Monday"
+    },
+    {
+      "date": "2024-11-19",
+      "y_true": 1969.0,
+      "y_pred": 3896.46,
+      "abs_error": 1927.46,
+      "day_of_week": "Tuesday"
+    }
+  ]
+}

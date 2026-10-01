@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gta-transit-delay-forecasting"
+version = "0.1.0"
+description = "1-day-ahead TTC bus delay forecasting with Open-Meteo weather join"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Lavanya Kumar" }, { name = "Lrk777" }]
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.1",
+  "scikit-learn>=1.4",
+  "matplotlib>=3.8",
+  "PyYAML>=6.0",
+  "requests>=2.31",
+  "openpyxl>=3.1",
+  "joblib>=1.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+markers = [
+  "slow: full pipeline on fixture / live data",
+]
+testpaths = ["tests"]

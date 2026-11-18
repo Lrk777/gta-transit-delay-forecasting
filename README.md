@@ -67,9 +67,41 @@ Checked-in run (seed **42**, `configs/default.yaml`):
 | ridge | 865.4 | **864.9** | 1087.8 | **29.9%** |
 | **hist_gradient_boosting** ★ | **860.5** | 869.4 | 1086.1 | 31.4% |
 
-★ Selected on validation. On this holdout, Ridge is essentially tied / slightly better on test MAE — an honest outcome for a noisy daily sum. Both beat lag baselines by ~10% MAE.
+★ Selected on validation among the original four models.
 
-**Error analysis highlights:** weekends have lower MAE than mid-week; large misses cluster on extreme delay days (e.g. 2024-11-20) and holiday-adjacent schedule shocks (Christmas). R² vs a mean baseline is weak — delay totals are bursty — so we emphasize **MAE vs lag baselines**, not R² alone.
+**Error analysis:** weekends have lower MAE than mid-week. The largest misses cluster on extreme delay days (e.g. 2024-11-20) and around holidays (Christmas). R² is weak because daily delay totals are bursty, so the comparison is MAE against simple baselines.
+
+### Stress-testing the headline (`python -m src.robustness`)
+
+The original write-up said the models beat yesterday's value by ~10%. Testing that claim harder changed the conclusion:
+
+| Model (6 candidates) | Val MAE | Test MAE |
+|---|---:|---:|
+| **Ridge without weather features** ★ | **844.1** | **827.1** |
+| HGB without weather features | 853.6 | 871.8 |
+| HGB (original) | 860.5 | 869.4 |
+| Ridge (original) | 865.4 | 864.9 |
+| 7-day rolling mean (new baseline) | 900.0 | 849.4 |
+| Yesterday's value (naive) | 1039.5 | 966.8 |
+
+★ Lowest validation MAE, so it is the model selected; test is reported once.
+
+95% intervals for test MAE differences (moving-block bootstrap, 7-day blocks, 2,000 resamples; negative = first model better):
+
+| Comparison | Difference | 95% interval |
+|---|---:|---:|
+| Ridge: with weather − without | +37.8 | [+14.7, +72.7] |
+| Ridge without weather − naive | −139.7 | [−318.7, +6.9] |
+| Ridge without weather − 7-day mean | −22.3 | [−90.9, +47.1] |
+| Original Ridge − original HGB | −4.5 | [−61.7, +58.1] |
+
+**What this means**
+
+1. **Yesterday's weather made the forecast worse, not better.** Dropping the four weather columns cut Ridge's error on both validation (865 → 844) and test (865 → 827), and the test interval excludes zero.
+2. **The ML model's edge over a 7-day average is within noise.** On 122 test days the gap (−22 minutes) has an interval from −91 to +47. A dispatcher would get almost the same forecast from a spreadsheet average.
+3. **Against yesterday's value the gain is likely real (−14%), but not certain.** 97% of resamples favour the model, but the interval still just crosses zero (up to +7 minutes).
+
+**Recommendation:** for daily planning, publish the 7-day rolling mean now. It is free to run and anyone can explain it. Keep Ridge without weather as a challenger and switch only if it beats the average over a longer test window, such as a full year with 2025 data. Don't spend effort on weather feeds at the daily system level; the useful signal is more likely route-level or same-day (snow-event) forecasting.
 
 ## Stack
 
@@ -88,6 +120,7 @@ python -m src.run_all
 # Or step-by-step
 python -m src.train --config configs/default.yaml
 python -m src.evaluate
+python -m src.robustness   # stronger baseline, weather ablation, bootstrap intervals
 
 # Offline / CI (synthetic fixtures)
 python -m src.run_all --fixture
@@ -108,6 +141,7 @@ src/ingest_weather.py    # Open-Meteo → daily
 src/features.py          # join, lags, rolling, calendar, time split
 src/models.py            # baselines + HGB
 src/train.py             # train / select / plots / metrics JSON
+src/robustness.py        # rolling-mean baseline, weather ablation, bootstrap CIs
 src/evaluate.py          # print metrics + error analysis
 src/run_all.py           # one command
 tests/                   # unit + fixture pipeline tests
@@ -120,7 +154,8 @@ reports/                 # metrics, predictions, figures
 - **Not operational ETA prediction** — daily system totals, not vehicle-level arrival times.
 - **Incident reporting ≠ passenger-experienced delay** — under/over-reporting and diversion coding matter.
 - **Holiday calendar is incomplete** (fixed dates + simple observed Mondays); full Ontario holiday logic would need a dedicated library.
-- **Weather is lag-1 observed**, not a proper NWP forecast product.
+- **Weather is lag-1 observed**, not a proper NWP forecast product (and it did not help at the daily system level; see above).
+- **122 test days** is short; intervals are wide. A 2025 holdout would settle the model-vs-average question.
 - **Distribution shift** — construction seasons, network changes, and labour events can break stationarity across years.
 - Metrics can drift slightly across sklearn versions; seed and YAML config are fixed for this report.
 

@@ -1,0 +1,76 @@
+{
+  "test_days": 122,
+  "selected_on_validation": "ridge_no_weather",
+  "val_mae": {
+    "ridge": 865.411277711244,
+    "hist_gradient_boosting": 860.5446482037893,
+    "naive_lag1": 1039.4634146341464,
+    "rolling_mean7": 899.9686411149827,
+    "ridge_no_weather": 844.1148342447614,
+    "hist_gradient_boosting_no_weather": 853.5657335673362
+  },
+  "test_mae": {
+    "ridge": 864.932790383592,
+    "hist_gradient_boosting": 869.4180584661287,
+    "naive_lag1": 966.8196721311475,
+    "rolling_mean7": 849.443793911007,
+    "ridge_no_weather": 827.1141662730035,
+    "hist_gradient_boosting_no_weather": 871.7996067313017
+  },
+  "bootstrap_95ci": {
+    "ridge_vs_naive_lag1": {
+      "mean_diff": -101.8868817475555,
+      "ci_low": -285.47594040996773,
+      "ci_high": 62.319920962442175,
+      "share_a_better": 0.8835
+    },
+    "ridge_vs_rolling_mean7": {
+      "mean_diff": 15.488996472585008,
+      "ci_low": -56.0155795801971,
+      "ci_high": 95.52769642435173,
+      "share_a_better": 0.307
+    },
+    "hgb_vs_rolling_mean7": {
+      "mean_diff": 19.97426455512156,
+      "ci_low": -46.01998535912994,
+      "ci_high": 94.65071471961173,
+      "share_a_better": 0.27
+    },
+    "ridge_vs_hgb": {
+      "mean_diff": -4.485268082536553,
+      "ci_low": -61.73019939485356,
+      "ci_high": 58.13169060016539,
+      "share_a_better": 0.531
+    },
+    "ridge_with_vs_without_weather": {
+      "mean_diff": 37.8186241105884,
+      "ci_low": 14.669508353281609,
+      "ci_high": 72.66357453631933,
+      "share_a_better": 0.001
+    },
+    "hgb_with_vs_without_weather": {
+      "mean_diff": -2.3815482651731057,
+      "ci_low": -27.73008538163112,
+      "ci_high": 30.733980930814436,
+      "share_a_better": 0.492
+    },
+    "ridge_no_weather_vs_naive_lag1": {
+      "mean_diff": -139.7055058581439,
+      "ci_low": -318.70876537383145,
+      "ci_high": 6.946097665687745,
+      "share_a_better": 0.9675
+    },
+    "ridge_no_weather_vs_rolling_mean7": {
+      "mean_diff": -22.32962763800339,
+      "ci_low": -90.92387605715714,
+      "ci_high": 47.103940917278784,
+      "share_a_better": 0.734
+    }
+  },
+  "weather_features": [
+    "temperature_2m_mean_lag_1",
+    "precipitation_sum_lag_1",
+    "snowfall_sum_lag_1",
+    "windspeed_10m_max_lag_1"
+  ]
+}

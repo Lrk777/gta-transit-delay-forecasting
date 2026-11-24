@@ -1,5 +1,7 @@
 # gta-transit-delay-forecasting
 
+**Live dashboard: [lrk777.github.io/gta-transit-delay-forecasting](https://lrk777.github.io/gta-transit-delay-forecasting/)**
+
 **1-day-ahead forecasting of system-wide TTC bus delay minutes**, joined with Toronto weather from Open-Meteo. Built as a GTA-focused portfolio project for data / ML new-grad roles (York U BDS Computation).
 
 ## Problem
